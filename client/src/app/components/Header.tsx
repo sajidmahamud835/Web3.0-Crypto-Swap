@@ -47,6 +47,14 @@ const Header = () => {
   const style = darkMode ? darkModeStyle : lightModeStyle
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme) {
+      setDarkMode(savedTheme === 'dark')
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+    }
+  }, [])
+
+  useEffect(() => {
     const fetchUserName = async () => {
       const query = `*[_type=="users" && _id == "${currentAccount}"] { userName }`
       const clientRes = await client.fetch(query)
