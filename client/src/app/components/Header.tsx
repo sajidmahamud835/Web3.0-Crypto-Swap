@@ -8,8 +8,8 @@ import uniswapLogo from '../assets/uniswap.png'
 import { TransactionContext } from '../context/TransactionContext'
 import { client } from '../lib/sanityClient'
 
-const style = {
-  wrapper: `p-4 w-screen flex justify-between items-center`,
+const darkModeStyle = {
+  wrapper: `p-4 w-screen flex justify-between items-center bg-black text-white`,
   headerLogo: `flex w-1/4 items-center justify-start`,
   nav: `flex-1 flex justify-center items-center`,
   navItemsContainer: `flex bg-[#191B1F] rounded-3xl`,
@@ -23,10 +23,28 @@ const style = {
   buttonAccent: `bg-[#172A42] border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
 }
 
+const lightModeStyle = {
+  wrapper: `p-4 w-screen flex justify-between items-center bg-white text-black`,
+  headerLogo: `flex w-1/4 items-center justify-start`,
+  nav: `flex-1 flex justify-center items-center`,
+  navItemsContainer: `flex bg-[#f0f0f0] rounded-3xl`,
+  navItem: `px-4 py-2 m-1 flex items-center text-lg font-semibold text-[0.9rem] cursor-pointer rounded-3xl`,
+  activeNavItem: `bg-[#e0e0e0]`,
+  buttonsContainer: `flex w-1/4 justify-end items-center`,
+  button: `flex items-center bg-[#f0f0f0] rounded-2xl mx-2 text-[0.9rem] font-semibold cursor-pointer`,
+  buttonPadding: `p-2`,
+  buttonTextContainer: `h-8 flex items-center`,
+  buttonIconContainer: `flex items-center justify-center w-8 h-8`,
+  buttonAccent: `bg-[#d0d0d0] border border-[#c0c0c0] hover:border-[#b0b0b0] h-full rounded-2xl flex items-center justify-center text-[#2f5ea6]`,
+}
+
 const Header = () => {
   const [selectedNav, setSelectedNav] = useState('swap')
   const [userName, setUserName] = useState<string>()
+  const [darkMode, setDarkMode] = useState(true) // default to dark mode, change as needed
   const { connectWallet, currentAccount } = useContext(TransactionContext)
+
+  const style = darkMode ? darkModeStyle : lightModeStyle
 
   useEffect(() => {
     const fetchUserName = async () => {
