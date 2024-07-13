@@ -1,11 +1,11 @@
 {
   "root": true,
+  "api": {
+    "projectId": "7yqvpg6n",
+    "dataset": "production"
+  },
   "project": {
     "name": "uniswap-clone"
-  },
-  "api": {
-    "projectId": "nw03is8d",
-    "dataset": "production"
   },
   "plugins": [
     "@sanity/base",
