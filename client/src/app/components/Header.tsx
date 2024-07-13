@@ -1,11 +1,10 @@
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { FiArrowUpRight } from 'react-icons/fi'
 import { AiOutlineDown } from 'react-icons/ai'
 import { HiOutlineDotsVertical } from 'react-icons/hi'
 import ethLogo from '../assets/eth.png'
 import uniswapLogo from '../assets/uniswap.png'
-import { useContext } from 'react'
 import { TransactionContext } from '../context/TransactionContext'
 import { client } from '../lib/sanityClient'
 
@@ -30,23 +29,20 @@ const Header = () => {
   const { connectWallet, currentAccount } = useContext(TransactionContext)
 
   useEffect(() => {
-    if (currentAccount) {
-      ;(async () => {
-        const query = `
-        *[_type=="users" && _id == "${currentAccount}"] {
-          userName,
-        }
-        `
-        const clientRes = await client.fetch(query)
+    const fetchUserName = async () => {
+      const query = `*[_type=="users" && _id == "${currentAccount}"] { userName }`
+      const clientRes = await client.fetch(query)
+      const fetchedUserName = clientRes[0]?.userName
 
-        if (!(clientRes[0].userName == 'Unnamed')) {
-          setUserName(clientRes[0].userName)
-        } else {
-          setUserName(
-            `${currentAccount.slice(0, 7)}...${currentAccount.slice(35)}`,
-          )
-        }
-      })()
+      if (fetchedUserName && fetchedUserName !== 'Unnamed') {
+        setUserName(fetchedUserName)
+      } else {
+        setUserName(`${currentAccount.slice(0, 7)}...${currentAccount.slice(-4)}`)
+      }
+    }
+
+    if (currentAccount) {
+      fetchUserName()
     }
   }, [currentAccount])
 
@@ -57,35 +53,16 @@ const Header = () => {
       </div>
       <div className={style.nav}>
         <div className={style.navItemsContainer}>
-          <div
-            onClick={() => setSelectedNav('swap')}
-            className={`${style.navItem} ${
-              selectedNav === 'swap' && style.activeNavItem
-            }`}
-          >
-            Swap
-          </div>
-          <div
-            onClick={() => setSelectedNav('pool')}
-            className={`${style.navItem} ${
-              selectedNav === 'pool' && style.activeNavItem
-            }`}
-          >
-            Pool
-          </div>
-          <div
-            onClick={() => setSelectedNav('vote')}
-            className={`${style.navItem} ${
-              selectedNav === 'vote' && style.activeNavItem
-            }`}
-          >
-            Vote
-          </div>
-          <a
-            href='https://info.uniswap.org/#/'
-            target='_blank'
-            rel='noreferrer'
-          >
+          {['swap', 'pool', 'vote'].map(item => (
+            <div
+              key={item}
+              onClick={() => setSelectedNav(item)}
+              className={`${style.navItem} ${selectedNav === item && style.activeNavItem}`}
+            >
+              {item.charAt(0).toUpperCase() + item.slice(1)}
+            </div>
+          ))}
+          <a href='https://info.uniswap.org/#/' target='_blank' rel='noreferrer'>
             <div className={style.navItem}>
               Charts <FiArrowUpRight />
             </div>
@@ -107,10 +84,7 @@ const Header = () => {
             <div className={style.buttonTextContainer}>{userName}</div>
           </div>
         ) : (
-          <div
-            onClick={() => connectWallet()}
-            className={`${style.button} ${style.buttonPadding}`}
-          >
+          <div onClick={connectWallet} className={`${style.button} ${style.buttonPadding}`}>
             <div className={`${style.buttonAccent} ${style.buttonPadding}`}>
               Connect Wallet
             </div>
