@@ -40,8 +40,8 @@ const lightModeStyle = {
 
 const Header = () => {
   const [selectedNav, setSelectedNav] = useState('swap')
-  const [userName, setUserName] = useState<string>()
-  const [darkMode, setDarkMode] = useState(true) // default to dark mode, change as needed
+  const [userName, setUserName] = useState()
+  const [darkMode, setDarkMode] = useState(false) // default to dark mode, change as needed
   const { connectWallet, currentAccount } = useContext(TransactionContext)
 
   const style = darkMode ? darkModeStyle : lightModeStyle
