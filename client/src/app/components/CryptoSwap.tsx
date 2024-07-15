@@ -105,6 +105,7 @@ const CryptoSwap = () => {
     };
 
     return (
+        <React.Suspense fallback={<div>Loading...</div>}>
         <div className="w-[360px] p-1 rounded-lg border border-blue-300 mx-auto mt-[50px] dark:bg-gray-800 dark:border-gray-600">
             {isOpenFristToken && (
                 <SearchCrypto
@@ -201,6 +202,7 @@ const CryptoSwap = () => {
                 <p>Are you really swap?</p>
             </Modal>
         </div>
+        </React.Suspense>
     );
 };
 
