@@ -6,6 +6,7 @@ import Main from "../components/Main";
 import Header from "../components/Header";
 import TransactionHistory from "../components/TransactionHistory";
 import { TransactionProvider } from "../context/TransactionContext";
+import CryptoSwap from "../components/CryptoSwap";
 
 export default function Login() {
   const style = {
@@ -15,12 +16,17 @@ export default function Login() {
     <>
       {" "}
       <TransactionProvider>
-        <div div className={style.wrapper}>
           <Header />
-          <Main />
-          <TransactionHistory />
-        </div>
+          <CryptoSwap />
       </TransactionProvider>
     </>
   );
 }
+
+   {/* 
+    <div div className={style.wrapper}>
+          <Header />
+          <Main />
+          <TransactionHistory />
+    </div>
+          */}
