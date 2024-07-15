@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import FeatureSection from "./components/FeatureSection";
 import FollowUs from "./components/FollowUs";
 import HeroSection from "./components/HeroSection";
@@ -8,6 +9,7 @@ import ThirdSection from "./components/ThirdSection";
 
 export default function Home() {
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <main className="">
       <Navbar />
       <HeroSection />
@@ -17,5 +19,6 @@ export default function Home() {
       {/* <NicePayTariffs /> */}
       <FollowUs />
     </main>
+    </Suspense>
   );
 }
