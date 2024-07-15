@@ -24,9 +24,9 @@ const CryptoSwap = () => {
 
     const [secondToken, setSecondToken] = useState(() => {
         const storedTokenName = secondTokenParam || '';
-        if (storedTokenName === '') return { token: 'Select a token', icon: './cryptos/btg.svg', price: 0 };
+        if (storedTokenName === '') return { token: 'BTG', icon: './cryptos/btg.svg', price: 0 };
         const storedToken = data.find(item => item.token.includes(storedTokenName));
-        return storedToken || { token: 'Select a token', icon: './cryptos/btg.svg', price: 0 };
+        return storedToken || { token: 'BTG', icon: './cryptos/btg.svg', price: 0 };
     });
 
     const [fistValue, setFistValue] = useState(0);

@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaSun } from "react-icons/fa";
 import { FaMoon } from "react-icons/fa";
+
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [walletAddress, setWalletAddress] = useState(null); // State to hold wallet address
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -14,6 +15,9 @@ function Navbar() {
       setIsDarkMode(savedTheme === "dark");
       document.documentElement.classList.toggle("dark", savedTheme === "dark");
     }
+    // Simulating wallet connection (replace with actual logic)
+    const connectedWallet = "0x1234...5678"; // Replace with actual connected wallet logic
+    setWalletAddress(connectedWallet);
   }, []);
 
   const toggleDarkMode = () => {
@@ -86,12 +90,12 @@ function Navbar() {
               </button>
             </li>
             <li>
-              <Link href="/login">
+              <Link href="/dashboard">
                 <button
                   type="button"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
-                  My Account
+                  {walletAddress ? `My Wallet (${walletAddress.substr(0, 6)}...)` : "Connect Wallet"}
                 </button>
               </Link>
             </li>
