@@ -4,7 +4,7 @@ import InputField from "../components/InputField";
 
 export default function OngoingTrades() {
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
     <div className="bg-white dark:bg-gray-900  min-h-screen">
       <DashboardNavbar />
       <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
