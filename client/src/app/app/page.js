@@ -9,15 +9,12 @@ import { TransactionProvider } from "../context/TransactionContext";
 import CryptoSwap from "../components/CryptoSwap";
 
 export default function Login() {
-  const style = {
-    wrapper: `h-screen max-h-screen h-min-screen w-screen bg-[#2D242F] text-white select-none flex flex-col justify-between`,
-  }
   return (
     <>
-      {" "}
       <TransactionProvider>
           <Navbar />
           <CryptoSwap />
+          <br />
       </TransactionProvider>
     </>
   );
@@ -29,4 +26,9 @@ export default function Login() {
           <Main />
           <TransactionHistory />
     </div>
-          */}
+          */
+    // const style = {
+    //   wrapper: `h-screen max-h-screen h-min-screen w-screen bg-[#2D242F] text-white select-none flex flex-col justify-between`,
+    // }
+  
+  }
