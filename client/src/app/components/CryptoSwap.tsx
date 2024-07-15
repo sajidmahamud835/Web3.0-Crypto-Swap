@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { message, Modal } from 'antd';
 import { HiArrowsUpDown } from "react-icons/hi2";
 import { FaAngleDown } from 'react-icons/fa';
-import data from '../data/cryptos.json'; // Adjust the import path as needed
+import data from '../data/cryptos.json';
 import SearchCrypto from './SearchCrypto';
 
 const CryptoSwap = () => {

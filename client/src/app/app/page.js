@@ -16,7 +16,7 @@ export default function Login() {
     <>
       {" "}
       <TransactionProvider>
-          <Header />
+          <Navbar />
           <CryptoSwap />
       </TransactionProvider>
     </>
