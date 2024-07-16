@@ -98,6 +98,54 @@ const CryptoSwap = () => {
         setFirstValue(Number((Number(e.target.value) * secondToken.price / firstToken.price).toFixed(5)));
     };
 
+    const getPrice = async () => {
+        try {
+            const response = await fetch(`/api/swap?action=getPrice&fromToken=${firstToken.token}&toToken=${secondToken.token}&amount=${firstValue}`);
+            const data = await response.json();
+            // Show indicative price in modal
+            Modal.info({
+                title: 'Indicative Price',
+                content: `Price: ${data.price}`
+            });
+        } catch (error) {
+            console.error('Error fetching price:', error);
+            messageApi.error('Failed to fetch price');
+        }
+    };
+
+    const getQuote = async () => {
+        try {
+            const response = await fetch(`/api/swap?action=getQuote&fromToken=${firstToken.token}&toToken=${secondToken.token}&amount=${firstValue}`);
+            const data = await response.json();
+            // Show quote in modal
+            Modal.confirm({
+                title: 'Swap Quote',
+                content: (
+                    <div>
+                        <p>Price: {data.price}</p>
+                        <p>Gas Estimate: {data.gas}</p>
+                    </div>
+                ),
+                onOk: () => confirmSwap(data)
+            });
+        } catch (error) {
+            console.error('Error fetching quote:', error);
+            messageApi.error('Failed to fetch quote');
+        }
+    };
+
+    const confirmSwap = async (quoteData) => {
+        try {
+            // Perform additional actions as needed for swap confirmation
+            console.log('Swap confirmed:', quoteData);
+            // For now, just display success message
+            success();
+        } catch (error) {
+            console.error('Error confirming swap:', error);
+            messageApi.error('Failed to confirm swap');
+        }
+    };
+
     const success = () => {
         setIsOpenConfirm(false);
         messageApi.open({
@@ -201,20 +249,27 @@ const CryptoSwap = () => {
                 {contextHolder}
                 <button
                     className="w-full h-[40px] bg-pink-100 text-center items-center mt-2 rounded-lg font-medium text-[18px] text-pink-600 hover:bg-pink-200 dark:bg-pink-600 dark:text-white dark:hover:bg-pink-500"
-                    onClick={() => setIsOpenConfirm(true)}
+                    onClick={getPrice}
+                    disabled={loading}
+                >
+                    Get Price
+                </button>
+                <button
+                    className="w-full h-[40px] bg-pink-100 text-center items-center mt-2 rounded-lg font-medium text-[18px] text-pink-600 hover:bg-pink-200 dark:bg-pink-600 dark:text-white dark:hover:bg-pink-500"
+                    onClick={getQuote}
                     disabled={loading}
                 >
                     Swap
                 </button>
                 <Modal
-                    title="Confirm"
-                    open={isOpenConfirm}
-                    onOk={success}
+                    title="Confirm Swap"
+                    visible={isOpenConfirm}
+                    onOk={() => setIsOpenConfirm(false)}
                     onCancel={() => setIsOpenConfirm(false)}
-                    okText="Yes"
-                    cancelText="No"
+                    okText="Confirm"
+                    cancelText="Cancel"
                 >
-                    <p>Are you really swap?</p>
+                    <p>Are you sure you want to swap?</p>
                 </Modal>
             </div>
         </React.Suspense>
