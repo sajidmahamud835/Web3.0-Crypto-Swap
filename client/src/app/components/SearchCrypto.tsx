@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Input } from 'antd';
+import dynamic from 'next/dynamic';
+import { Modal, Input, Spin } from 'antd';
 
-import CryptoItem from './CryptoItem';
-import PinCryptoItem from './PinCryptoItem';
-
-import data from '../data/cryptos.json';
-import pindata from '../data/top_crypto.json';
-import popdata from '../data/pop_crypto.json';
+const CryptoItem = dynamic(() => import('./CryptoItem'));
+const PinCryptoItem = dynamic(() => import('./PinCryptoItem'));
 
 interface SearchCryptoProps {
     open: boolean,
@@ -21,7 +18,39 @@ const SearchCrypto: React.FC<SearchCryptoProps> = ({
     setToken
 }) => {
     const [searchValue, setSearchValue] = useState('');
-    const [filteredData, setFilteredData] = useState(data);
+    const [filteredData, setFilteredData] = useState([]);
+    const [data, setData] = useState([]);
+    const [pindata, setPindata] = useState([]);
+    const [popdata, setPopdata] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Fetch data from the APIs
+        const fetchData = async () => {
+            try {
+                const [cryptoResponse, pinCryptoResponse, popCryptoResponse] = await Promise.all([
+                    fetch('/api/cryptos'),
+                    fetch('/api/pinned_cryptos'),
+                    fetch('/api/popular_cryptos')
+                ]);
+
+                const cryptoData = await cryptoResponse.json();
+                const pinCryptoData = await pinCryptoResponse.json();
+                const popCryptoData = await popCryptoResponse.json();
+
+                setData(cryptoData);
+                setPindata(pinCryptoData);
+                setPopdata(popCryptoData);
+
+                setLoading(false); // Set loading to false after all data is fetched
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setLoading(false); // Set loading to false in case of error
+            }
+        };
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         // Filter the data based on the search value
@@ -30,7 +59,7 @@ const SearchCrypto: React.FC<SearchCryptoProps> = ({
         );
 
         setFilteredData(filteredTokens);
-    }, [searchValue]);
+    }, [searchValue, data]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
@@ -47,48 +76,56 @@ const SearchCrypto: React.FC<SearchCryptoProps> = ({
                 onCancel={onClose}
                 footer={null}
             >
-                <Input
-                    placeholder="Search token"
-                    value={searchValue}
-                    onChange={handleSearchChange}
-                />
-
-                <div className="p-2">
-                    {pindata.map(item => (
-                        <PinCryptoItem
-                            key={item.token}
-                            name={item.name}
-                            token={item.token}
-                            icon={item.icon}
-                            price={item.price}
-                            setToken={() => setToken(item.token, item.icon, item.price)}
+                {loading ? (
+                    <div style={{ textAlign: 'center', padding: '20px' }}>
+                        <Spin size="large" />
+                    </div>
+                ) : (
+                    <>
+                        <Input
+                            placeholder="Search token"
+                            value={searchValue}
+                            onChange={handleSearchChange}
                         />
-                    ))}
-                </div>
 
-                <hr className="mb-2" />
-                {
-                    searchValue === '' ? (
-                        popdata.map(item => (
-                            <CryptoItem
-                                key={item.token}
-                                name={item.name}
-                                token={item.token}
-                                icon={item.icon}
-                                price={item.price}
-                                setToken={() => setToken(item.token, item.icon, item.price)}
-                            />
-                        ))) : (filteredData.map(item => (
-                            <CryptoItem
-                                key={item.token}
-                                name={item.name}
-                                token={item.token}
-                                icon={item.icon}
-                                price={item.price}
-                                setToken={() => setToken(item.token, item.icon, item.price)}
-                            />
-                        )))
-                }
+                        <div className="p-2">
+                            {pindata.map(item => (
+                                <PinCryptoItem
+                                    key={item.token}
+                                    name={item.name}
+                                    token={item.token}
+                                    icon={item.icon}
+                                    price={item.price}
+                                    setToken={() => setToken(item.token, item.icon, item.price)}
+                                />
+                            ))}
+                        </div>
+
+                        <hr className="mb-2" />
+                        {
+                            searchValue === '' ? (
+                                popdata.map(item => (
+                                    <CryptoItem
+                                        key={item.token}
+                                        name={item.name}
+                                        token={item.token}
+                                        icon={item.icon}
+                                        price={item.price}
+                                        setToken={() => setToken(item.token, item.icon, item.price)}
+                                    />
+                                ))) : (filteredData.map(item => (
+                                    <CryptoItem
+                                        key={item.token}
+                                        name={item.name}
+                                        token={item.token}
+                                        icon={item.icon}
+                                        price={item.price}
+                                        setToken={() => setToken(item.token, item.icon, item.price)}
+                                    />
+                                )))
+                        }
+                    </>
+                )}
             </Modal>
         </div>
     );
