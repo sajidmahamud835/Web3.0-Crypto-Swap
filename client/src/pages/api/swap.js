@@ -2,9 +2,9 @@ import Web3 from 'web3';
 import fetch from 'node-fetch';
 require('dotenv').config();
 
-const { 0X_API_KEY, INFURA_PROJECT_ID, SOPHILA_TESTNET_URL } = process.env;
+const { ZeroX_API_KEY, INFURA_PROJECT_ID, SOPHILA_TESTNET_URL } = process.env;
 
-if (!INFURA_PROJECT_ID || !SOPHILA_TESTNET_URL || !0X_API_KEY) {
+if (!INFURA_PROJECT_ID || !SOPHILA_TESTNET_URL || !ZeroX_API_KEY) {
   throw new Error('Missing required environment variables');
 }
 
@@ -23,7 +23,7 @@ const getSwapPrice = async (fromToken, toToken, amount) => {
   const response = await fetch(`${API_URL}?${queryString}`, {
     headers: {
       'Content-Type': 'application/json',
-      '0x-api-key': 0X_API_KEY,
+      '0x-api-key': ZeroX_API_KEY,
     },
   });
   
@@ -56,7 +56,7 @@ const getSwapQuote = async (fromToken, toToken, amount) => {
   const response = await fetch(`${API_URL}?${queryString}`, {
     headers: {
       'Content-Type': 'application/json',
-      '0x-api-key': 0X_API_KEY,
+      '0x-api-key': ZeroX_API_KEY,
     },
   });
   
