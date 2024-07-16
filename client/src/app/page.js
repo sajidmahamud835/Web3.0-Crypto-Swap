@@ -11,14 +11,14 @@ export default function Home() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
     <main className="">
-      <Navbar />
-      <HeroSection />
-      <FeatureSection />
-      <ThirdSection />
-      <PaymentSolution />
-      {/* <NicePayTariffs /> */}
-      <FollowUs />
+     The site is under development.
     </main>
     </Suspense>
   );
 }
+ {/* <Navbar />
+      <HeroSection />
+      <FeatureSection />
+      <ThirdSection />
+      <PaymentSolution />
+      <FollowUs /> */}
