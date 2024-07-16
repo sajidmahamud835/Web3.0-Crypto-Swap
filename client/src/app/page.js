@@ -16,7 +16,6 @@ export default function Home() {
       <FeatureSection />
       <ThirdSection />
       <PaymentSolution />
-      {/* <NicePayTariffs /> */}
       <FollowUs />
     </main>
     </Suspense>
