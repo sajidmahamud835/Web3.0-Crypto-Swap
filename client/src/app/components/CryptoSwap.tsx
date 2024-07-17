@@ -18,8 +18,11 @@ const CryptoSwap = () => {
     const secondTokenParam = searchParams.get('secondToken');
 
     const [data, setData] = useState([]);
-    const [firstToken, setFirstToken] = useState({ token: 'ETH', icon: './cryptos/eth.svg', price: 70 });
-    const [secondToken, setSecondToken] = useState({ token: 'BTG', icon: './cryptos/btg.svg', price: 0 });
+    const [firstToken, setFirstToken] = useState({ token: 'ETH', icon: './cryptos/eth.svg' });
+    const [secondToken, setSecondToken] = useState({
+        token: 'USDT',
+        icon: "./cryptos/usdt.svg"
+      },);
     const [firstValue, setFirstValue] = useState(0);
     const [secondValue, setSecondValue] = useState(0);
 
@@ -39,12 +42,12 @@ const CryptoSwap = () => {
 
                 if (firstTokenParam) {
                     const storedToken = result.find(item => item.token.includes(firstTokenParam));
-                    setFirstToken(storedToken || { token: 'ETH', icon: './cryptos/eth.svg', price: 70 });
+                    setFirstToken(storedToken || result[0]);
                 }
 
                 if (secondTokenParam) {
                     const storedToken = result.find(item => item.token.includes(secondTokenParam));
-                    setSecondToken(storedToken || { token: 'BTG', icon: './cryptos/btg.svg', price: 0 });
+                    setSecondToken(storedToken || result[3]);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -57,6 +60,7 @@ const CryptoSwap = () => {
 
     useEffect(() => {
         updateUrlParams();
+        fetchPrice();
 
         if (firstToken.token === 'Select a token') firstTokenRef.current?.setAttribute('disabled', 'true');
         else firstTokenRef.current?.removeAttribute('disabled');
@@ -71,46 +75,52 @@ const CryptoSwap = () => {
         window.history.replaceState({}, '', `?${urlParams.toString()}`);
     };
 
+    const fetchPrice = async () => {
+        if (firstToken.token && secondToken.token && firstValue > 0) {
+            try {
+                const response = await fetch(`/api/swap?action=getPrice&fromToken=${firstToken.token}&toToken=${secondToken.token}&amount=${firstValue}`);
+                const data = await response.json();
+                setSecondValue(Number((firstValue * data.price).toFixed(5)));
+            } catch (error) {
+                console.error('Error fetching price:', error);
+                messageApi.error('Failed to fetch price');
+            }
+        }
+    };
+
     const onClose = () => {
         setIsOpenFirstToken(false);
         setIsOpenSecondToken(false);
     };
 
     const setFToken = (token, icon, price) => {
-        setFirstToken({ token, icon, price });
-        setFirstValue(Number((secondValue * secondToken.price / price).toFixed(5)));
+        setFirstToken(prevState => {
+            const newFirstValue = (secondValue * secondToken.price) / price;
+            setFirstValue(Number(newFirstValue.toFixed(5)));
+            return { token, icon, price };
+        });
+        fetchPrice();
         onClose();
     };
 
     const setSToken = (token, icon, price) => {
-        setSecondToken({ token, icon, price });
-        setSecondValue(Number((firstValue * firstToken.price / price).toFixed(5)));
+        setSecondToken(prevState => {
+            const newSecondValue = (firstValue * firstToken.price) / price;
+            setSecondValue(Number(newSecondValue.toFixed(5)));
+            return { token, icon, price };
+        });
+        fetchPrice();
         onClose();
     };
 
     const onChangeFirstToken = (e) => {
         setFirstValue(Number(e.target.value));
-        setSecondValue(Number((Number(e.target.value) * firstToken.price / secondToken.price).toFixed(5)));
+        fetchPrice();
     };
 
     const onChangeSecondToken = (e) => {
         setSecondValue(Number(e.target.value));
         setFirstValue(Number((Number(e.target.value) * secondToken.price / firstToken.price).toFixed(5)));
-    };
-
-    const getPrice = async () => {
-        try {
-            const response = await fetch(`/api/swap?action=getPrice&fromToken=${firstToken.token}&toToken=${secondToken.token}&amount=${firstValue}`);
-            const data = await response.json();
-            // Show indicative price in modal
-            Modal.info({
-                title: 'Indicative Price',
-                content: `Price: ${data.price}`
-            });
-        } catch (error) {
-            console.error('Error fetching price:', error);
-            messageApi.error('Failed to fetch price');
-        }
     };
 
     const getQuote = async () => {
@@ -157,7 +167,7 @@ const CryptoSwap = () => {
     const changeToken = () => {
         const tempFirstToken = { ...firstToken };
         const tempFirstValue = firstValue;
-        
+
         setFirstToken(secondToken);
         setFirstValue(secondValue);
         setSecondToken(tempFirstToken);
@@ -247,13 +257,6 @@ const CryptoSwap = () => {
                     </span>
                 </div>
                 {contextHolder}
-                <button
-                    className="w-full h-[40px] bg-pink-100 text-center items-center mt-2 rounded-lg font-medium text-[18px] text-pink-600 hover:bg-pink-200 dark:bg-pink-600 dark:text-white dark:hover:bg-pink-500"
-                    onClick={getPrice}
-                    disabled={loading}
-                >
-                    Get Price
-                </button>
                 <button
                     className="w-full h-[40px] bg-pink-100 text-center items-center mt-2 rounded-lg font-medium text-[18px] text-pink-600 hover:bg-pink-200 dark:bg-pink-600 dark:text-white dark:hover:bg-pink-500"
                     onClick={getQuote}

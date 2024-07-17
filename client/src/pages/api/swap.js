@@ -16,7 +16,7 @@ const getSwapPrice = async (fromToken, toToken, amount) => {
     sellToken: fromToken,
     buyToken: toToken,
     sellAmount: amount,
-    chainId: 42, // Replace with your desired chain ID
+    chainId: 1,
   };
 
   const queryString = new URLSearchParams(queryParams).toString();
@@ -26,12 +26,14 @@ const getSwapPrice = async (fromToken, toToken, amount) => {
       '0x-api-key': ZeroX_API_KEY,
     },
   });
-  
+
+  const data = await response.json();
   if (!response.ok) {
-    throw new Error(`Failed to fetch price: ${response.statusText}`);
+    const errorMessage = data.validationErrors?.map(err => err.reason).join(', ') || response.statusText;
+    throw new Error(`Failed to fetch price: ${errorMessage}`);
   }
 
-  return response.json();
+  return data;
 };
 
 const getSwapQuote = async (fromToken, toToken, amount) => {
@@ -40,16 +42,8 @@ const getSwapQuote = async (fromToken, toToken, amount) => {
     sellToken: fromToken,
     buyToken: toToken,
     sellAmount: amount,
-    chainId: 42, // Replace with your desired chain ID
-    taker: '', // Specify the taker address if required
-    txOrigin: '', // Specify the transaction origin address if required
-    swapFeeRecipient: '', // Specify swap fee recipient address if required
-    swapFeeBps: 0, // Specify swap fee in Bps if required
-    swapFeeToken: '', // Specify swap fee token if required
-    tradeSurplusRecipient: '', // Specify trade surplus recipient address if required
-    gasPrice: '', // Specify target gas price in wei if required
-    slippageBps: 100, // Specify maximum acceptable slippage in Bps (defaulting to 100)
-    excludedSources: '', // Specify liquidity sources to exclude if needed
+    chainId: 42,
+    slippageBps: 100,
   };
 
   const queryString = new URLSearchParams(queryParams).toString();
@@ -59,12 +53,14 @@ const getSwapQuote = async (fromToken, toToken, amount) => {
       '0x-api-key': ZeroX_API_KEY,
     },
   });
-  
+
+  const data = await response.json();
   if (!response.ok) {
-    throw new Error(`Failed to fetch quote: ${response.statusText}`);
+    const errorMessage = data.validationErrors?.map(err => err.reason).join(', ') || response.statusText;
+    throw new Error(`Failed to fetch quote: ${errorMessage}`);
   }
 
-  return response.json();
+  return data;
 };
 
 export default async function handler(req, res) {
