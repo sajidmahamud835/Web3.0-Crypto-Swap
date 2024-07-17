@@ -6,10 +6,12 @@ import Navbar from "./components/Navbar";
 import NicePayTariffs from "./components/NicePayTariffs";
 import PaymentSolution from "./components/PaymentSolution";
 import ThirdSection from "./components/ThirdSection";
+import { Web3Provider } from "./context/Web3Provider.tsx";
 
 export default function Home() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
+    <Web3Provider>
     <main className="">
     <Navbar />
       <HeroSection />
@@ -18,6 +20,7 @@ export default function Home() {
       <PaymentSolution />
       <FollowUs />
     </main>
+    </Web3Provider>
     </Suspense>
   );
 }

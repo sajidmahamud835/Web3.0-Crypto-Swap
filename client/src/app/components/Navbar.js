@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaSun } from "react-icons/fa";
 import { FaMoon } from "react-icons/fa";
+import { ConnectKitButton } from "connectkit";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,14 +91,15 @@ function Navbar() {
               </button>
             </li>
             <li>
-              <Link href="/dashboard">
+            <ConnectKitButton/>
+              {/* <Link href="/dashboard">
                 <button
                   type="button"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
                   {walletAddress ? `My Wallet (${walletAddress.substr(0, 6)}...)` : "Connect Wallet"}
                 </button>
-              </Link>
+              </Link> */}
             </li>
           </ul>
         </div>
