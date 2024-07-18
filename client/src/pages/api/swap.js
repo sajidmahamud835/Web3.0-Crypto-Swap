@@ -1,10 +1,9 @@
-import Web3 from 'web3';
 import fetch from 'node-fetch';
 require('dotenv').config();
 
-const { ZeroX_API_KEY, INFURA_PROJECT_ID, SOPHILA_TESTNET_URL } = process.env;
+const { ZeroX_API_KEY } = process.env;
 
-if (!INFURA_PROJECT_ID || !SOPHILA_TESTNET_URL || !ZeroX_API_KEY) {
+if (!ZeroX_API_KEY) {
   throw new Error('Missing required environment variables');
 }
 

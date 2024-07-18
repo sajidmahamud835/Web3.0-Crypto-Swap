@@ -2,11 +2,13 @@
 const nextConfig = {
     env: {
         ZeroX_API_KEY: process.env.ZeroX_API_KEY,
-        INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
-        PRIVATE_KEY: process.env.PRIVATE_KEY,
-        SOPHILA_TESTNET_URL: process.env.SOPHILA_TESTNET_URL,
-        
+        MONGODB_URI: process.env.MONGODB_URI
       },
+      webpack: (config) => {
+        config.resolve.fallback = { fs: false, net: false, tls: false };
+        return config;
+      },
+
 };
 
 export default nextConfig;

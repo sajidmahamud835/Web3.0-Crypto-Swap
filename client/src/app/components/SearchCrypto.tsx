@@ -6,6 +6,13 @@ import { Modal, Input, Spin } from 'antd';
 const CryptoItem = dynamic(() => import('./CryptoItem'));
 const PinCryptoItem = dynamic(() => import('./PinCryptoItem'));
 
+interface CryptoData {
+    name: string;
+    token: string;
+    icon: string;
+    price: number;
+}
+
 interface SearchCryptoProps {
     open: boolean,
     onClose: () => void,
@@ -18,10 +25,10 @@ const SearchCrypto: React.FC<SearchCryptoProps> = ({
     setToken
 }) => {
     const [searchValue, setSearchValue] = useState('');
-    const [filteredData, setFilteredData] = useState([]);
-    const [data, setData] = useState([]);
-    const [pindata, setPindata] = useState([]);
-    const [popdata, setPopdata] = useState([]);
+    const [filteredData, setFilteredData] = useState<CryptoData[]>([]);
+    const [data, setData] = useState<CryptoData[]>([]);
+    const [pindata, setPindata] = useState<CryptoData[]>([]);
+    const [popdata, setPopdata] = useState<CryptoData[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,9 +45,13 @@ const SearchCrypto: React.FC<SearchCryptoProps> = ({
                 const pinCryptoData = await pinCryptoResponse.json();
                 const popCryptoData = await popCryptoResponse.json();
 
-                setData(cryptoData);
-                setPindata(pinCryptoData);
-                setPopdata(popCryptoData);
+                console.log('cryptoData:', cryptoData);
+                console.log('pinCryptoData:', pinCryptoData);
+                console.log('popCryptoData:', popCryptoData);
+
+                setData(Array.isArray(cryptoData) ? cryptoData : []);
+                setPindata(Array.isArray(pinCryptoData) ? pinCryptoData : []);
+                setPopdata(Array.isArray(popCryptoData) ? popCryptoData : []);
 
                 setLoading(false); // Set loading to false after all data is fetched
             } catch (error) {
