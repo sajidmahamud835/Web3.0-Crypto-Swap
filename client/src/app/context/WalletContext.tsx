@@ -10,6 +10,7 @@ import {
     NETWORKS
 } from "../lib/web3";
 import ErrorDialog from "../components/ErrorDialog";
+import { toast } from "react-hot-toast";
 
 interface WalletState {
     address: string | null;
@@ -55,6 +56,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         details: undefined,
     });
 
+
+
     // Parse and show user-friendly error messages
     const handleWalletError = useCallback((error: any) => {
         let title = "Connection Failed";
@@ -65,23 +68,27 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         if (error.code === 4001 || error.code === "ACTION_REJECTED" ||
             error.message?.includes("rejected") || error.message?.includes("denied")) {
             title = "Connection Rejected";
-            message = "You rejected the wallet connection request. Please approve the connection in MetaMask to continue.";
+            message = "You rejected the wallet connection request.";
             details = "Error Code: 4001 (User Rejected Request)";
+            toast.error(message);
         }
         // Check for already processing
         else if (error.code === -32002) {
             title = "Request Pending";
-            message = "A connection request is already pending. Please check your MetaMask extension and approve or reject the existing request.";
+            message = "A connection request is already pending. Please check MetaMask.";
             details = "Error Code: -32002 (Request Already Pending)";
+            toast.loading(message, { duration: 4000 });
         }
         // Check for no MetaMask
         else if (error.message?.includes("MetaMask")) {
             title = "MetaMask Not Found";
-            message = "Please install MetaMask browser extension to connect your wallet.";
+            message = "Please install MetaMask browser extension.";
+            toast.error(message);
         }
         // Generic error with details
         else {
             details = error.message || JSON.stringify(error);
+            toast.error(message);
         }
 
         setErrorDialog({
@@ -101,10 +108,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     // Connect wallet
     const connect = useCallback(async () => {
         if (!isMetaMaskInstalled()) {
+            const msg = "Please install MetaMask browser extension to connect your wallet.";
+            toast.error(msg);
             setErrorDialog({
                 isOpen: true,
                 title: "MetaMask Not Found",
-                message: "Please install MetaMask browser extension to connect your wallet.",
+                message: msg,
                 details: undefined,
             });
             window.open("https://metamask.io/download/", "_blank");
@@ -112,10 +121,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         }
 
         setState(prev => ({ ...prev, isConnecting: true, error: null }));
+        const loadingToast = toast.loading("Connecting wallet...");
 
         try {
             const { address, balance } = await connectWallet();
             const network = await getNetwork();
+
+            toast.dismiss(loadingToast);
+            toast.success("Wallet connected successfully!");
 
             setState({
                 address,
@@ -126,6 +139,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
                 error: null,
             });
         } catch (error: any) {
+            toast.dismiss(loadingToast);
             handleWalletError(error);
         }
     }, [handleWalletError]);
@@ -140,6 +154,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const disconnect = useCallback(() => {
         disconnectWallet();
         setState(initialState);
+        toast.success("Wallet disconnected");
     }, []);
 
     // Handle retry

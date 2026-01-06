@@ -73,6 +73,8 @@ export const metadata: Metadata = {
     metadataBase: new URL("https://crypto-swap-dex.vercel.app"),
 };
 
+import { Toaster } from "react-hot-toast";
+
 export default function RootLayout({
     children,
 }: {
@@ -83,7 +85,15 @@ export default function RootLayout({
             <body
                 className={`${inter.className} bg-[var(--background)] text-[var(--text)] antialiased transition-colors duration-300`}
             >
-                <WalletProvider>{children}</WalletProvider>
+                <WalletProvider>
+                    {children}
+                    <Toaster position="bottom-right" toastOptions={{
+                        style: {
+                            background: '#333',
+                            color: '#fff',
+                        },
+                    }} />
+                </WalletProvider>
             </body>
         </html>
     );

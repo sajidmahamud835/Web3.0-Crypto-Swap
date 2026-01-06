@@ -8,6 +8,7 @@ import { FaAngleDown, FaCog } from "react-icons/fa";
 import { useWallet } from "../context/WalletContext";
 import data from "../data/cryptos.json";
 import SearchCrypto from "./SearchCrypto";
+import { toast } from "react-hot-toast";
 
 interface Token {
     token: string;
@@ -103,10 +104,25 @@ const CryptoSwapContent = () => {
         setIsSwapping(true);
 
         // Simulate swap transaction
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        setIsSwapping(false);
-        alert(`✅ Swapped ${firstValue} ${firstToken.token} for ${secondValue} ${secondToken.token}`);
+        try {
+            await toast.promise(
+                new Promise((resolve) => setTimeout(resolve, 2000)),
+                {
+                    loading: 'Swapping tokens...',
+                    success: `Successfully swapped ${firstValue} ${firstToken.token} for ${secondValue} ${secondToken.token}`,
+                    error: 'Swap failed',
+                },
+                {
+                    style: {
+                        minWidth: '250px',
+                    },
+                }
+            );
+            setIsSwapping(false);
+        } catch (error) {
+            console.error(error);
+            setIsSwapping(false);
+        }
     };
 
     const rate = firstToken.price / secondToken.price;
@@ -134,8 +150,8 @@ const CryptoSwapContent = () => {
                                 key={value}
                                 onClick={() => setSlippage(value)}
                                 className={`px-3 py-1 rounded-lg text-sm transition-colors ${slippage === value
-                                        ? "bg-indigo-500 text-white"
-                                        : "bg-white/10 text-gray-400 hover:text-white"
+                                    ? "bg-indigo-500 text-white"
+                                    : "bg-white/10 text-gray-400 hover:text-white"
                                     }`}
                             >
                                 {value}%
@@ -252,12 +268,12 @@ const CryptoSwapContent = () => {
                 onClick={handleSwap}
                 disabled={isSwapping || firstValue === 0}
                 className={`w-full mt-4 py-4 rounded-xl font-semibold text-lg transition-all ${!isConnected
-                        ? "gradient-bg text-white hover:opacity-90"
-                        : firstValue === 0
-                            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                            : isSwapping
-                                ? "bg-indigo-500/50 text-white cursor-wait"
-                                : "gradient-bg text-white hover:opacity-90"
+                    ? "gradient-bg text-white hover:opacity-90"
+                    : firstValue === 0
+                        ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                        : isSwapping
+                            ? "bg-indigo-500/50 text-white cursor-wait"
+                            : "gradient-bg text-white hover:opacity-90"
                     }`}
             >
                 {!isConnected
