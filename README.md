@@ -124,9 +124,10 @@ CryptoSwap addresses these challenges through:
 
 ## Screenshots
 
-### Homepage (Dark Mode)
+### Homepage (Dark & Light Mode)
 <p align="center">
-  <img src="docs/screenshots/homepage-dark.png" alt="Homepage Dark Mode" width="80%">
+  <img src="docs/screenshots/homepage-dark.png" alt="Homepage Dark Mode" width="48%">
+  <img src="docs/screenshots/homepage-light.png" alt="Homepage Light Mode" width="48%">
 </p>
 
 ### Token Selector Modal
