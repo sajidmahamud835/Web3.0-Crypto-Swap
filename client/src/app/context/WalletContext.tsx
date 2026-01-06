@@ -9,6 +9,7 @@ import {
     getNetwork,
     NETWORKS
 } from "../lib/web3";
+import ErrorDialog from "../components/ErrorDialog";
 
 interface WalletState {
     address: string | null;
@@ -24,6 +25,14 @@ interface WalletContextType extends WalletState {
     disconnect: () => void;
     formattedAddress: string;
     networkName: string;
+    clearError: () => void;
+}
+
+interface ErrorDialogState {
+    isOpen: boolean;
+    title: string;
+    message: string;
+    details?: string;
 }
 
 const initialState: WalletState = {
@@ -39,11 +48,65 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: ReactNode }) {
     const [state, setState] = useState<WalletState>(initialState);
+    const [errorDialog, setErrorDialog] = useState<ErrorDialogState>({
+        isOpen: false,
+        title: "",
+        message: "",
+        details: undefined,
+    });
+
+    // Parse and show user-friendly error messages
+    const handleWalletError = useCallback((error: any) => {
+        let title = "Connection Failed";
+        let message = "Unable to connect to your wallet.";
+        let details = "";
+
+        // Check for user rejection (code 4001)
+        if (error.code === 4001 || error.code === "ACTION_REJECTED" ||
+            error.message?.includes("rejected") || error.message?.includes("denied")) {
+            title = "Connection Rejected";
+            message = "You rejected the wallet connection request. Please approve the connection in MetaMask to continue.";
+            details = "Error Code: 4001 (User Rejected Request)";
+        }
+        // Check for already processing
+        else if (error.code === -32002) {
+            title = "Request Pending";
+            message = "A connection request is already pending. Please check your MetaMask extension and approve or reject the existing request.";
+            details = "Error Code: -32002 (Request Already Pending)";
+        }
+        // Check for no MetaMask
+        else if (error.message?.includes("MetaMask")) {
+            title = "MetaMask Not Found";
+            message = "Please install MetaMask browser extension to connect your wallet.";
+        }
+        // Generic error with details
+        else {
+            details = error.message || JSON.stringify(error);
+        }
+
+        setErrorDialog({
+            isOpen: true,
+            title,
+            message,
+            details: details || undefined,
+        });
+
+        setState(prev => ({
+            ...prev,
+            isConnecting: false,
+            error: message,
+        }));
+    }, []);
 
     // Connect wallet
     const connect = useCallback(async () => {
         if (!isMetaMaskInstalled()) {
-            setState(prev => ({ ...prev, error: "Please install MetaMask" }));
+            setErrorDialog({
+                isOpen: true,
+                title: "MetaMask Not Found",
+                message: "Please install MetaMask browser extension to connect your wallet.",
+                details: undefined,
+            });
             window.open("https://metamask.io/download/", "_blank");
             return;
         }
@@ -63,12 +126,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
                 error: null,
             });
         } catch (error: any) {
-            setState(prev => ({
-                ...prev,
-                isConnecting: false,
-                error: error.message || "Failed to connect wallet"
-            }));
+            handleWalletError(error);
         }
+    }, [handleWalletError]);
+
+    // Clear error
+    const clearError = useCallback(() => {
+        setState(prev => ({ ...prev, error: null }));
+        setErrorDialog(prev => ({ ...prev, isOpen: false }));
     }, []);
 
     // Disconnect wallet
@@ -76,6 +141,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         disconnectWallet();
         setState(initialState);
     }, []);
+
+    // Handle retry
+    const handleRetry = useCallback(() => {
+        setErrorDialog(prev => ({ ...prev, isOpen: false }));
+        connect();
+    }, [connect]);
 
     // Listen for account changes
     useEffect(() => {
@@ -90,7 +161,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         };
 
         const handleChainChanged = () => {
-            // Reload on chain change (recommended by MetaMask)
             window.location.reload();
         };
 
@@ -125,6 +195,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         ...state,
         connect,
         disconnect,
+        clearError,
         formattedAddress: state.address ? formatAddress(state.address) : "",
         networkName: state.chainId ? NETWORKS[state.chainId]?.name || "Unknown Network" : "",
     };
@@ -132,6 +203,16 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     return (
         <WalletContext.Provider value={value}>
             {children}
+
+            {/* Error Dialog */}
+            <ErrorDialog
+                isOpen={errorDialog.isOpen}
+                title={errorDialog.title}
+                message={errorDialog.message}
+                details={errorDialog.details}
+                onClose={clearError}
+                onRetry={handleRetry}
+            />
         </WalletContext.Provider>
     );
 }
