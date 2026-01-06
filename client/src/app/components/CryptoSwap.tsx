@@ -1,154 +1,199 @@
-import * as React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { message, Modal } from 'antd';
-import { HiArrowsUpDown } from "react-icons/hi2";
-import { FaAngleDown } from 'react-icons/fa';
-import data from '../data/cryptos.json'; // Adjust the import path as needed
-import SearchCrypto from './SearchCrypto';
+"use client";
 
-const CryptoSwap = () => {
-    const [isOpenFristToken, setIsOpenFristToken] = useState(false);
+import * as React from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { HiArrowsUpDown } from "react-icons/hi2";
+import { FaAngleDown, FaCog } from "react-icons/fa";
+import { useWallet } from "../context/WalletContext";
+import data from "../data/cryptos.json";
+import SearchCrypto from "./SearchCrypto";
+
+interface Token {
+    token: string;
+    icon: string;
+    price: number;
+}
+
+const CryptoSwapContent = () => {
+    const [isOpenFirstToken, setIsOpenFirstToken] = useState(false);
     const [isOpenSecondToken, setIsOpenSecondToken] = useState(false);
-    const [isOpenConfirm, setIsOpenConfirm] = useState(false);
+    const [isSwapping, setIsSwapping] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [slippage, setSlippage] = useState(0.5);
 
     const searchParams = useSearchParams();
-    const firstTokenParam = searchParams.get('firstToken');
-    const secondTokenParam = searchParams.get('secondToken');
+    const firstTokenParam = searchParams.get("firstToken");
+    const secondTokenParam = searchParams.get("secondToken");
 
-    const [firstToken, setFirstToken] = useState(() => {
-        const storedTokenName = firstTokenParam || '';
-        const storedToken = data.find(item => item.token.includes(storedTokenName));
-        return storedToken || { token: 'ETH', icon: './cryptos/eth.svg', price: 70 };
+    const { isConnected, connect, formattedAddress } = useWallet();
+
+    const [firstToken, setFirstToken] = useState<Token>(() => {
+        const storedTokenName = firstTokenParam || "";
+        const storedToken = data.find((item) => item.token.includes(storedTokenName));
+        return storedToken || { token: "ETH", icon: "./cryptos/eth.svg", price: 2400 };
     });
 
-    const [secondToken, setSecondToken] = useState(() => {
-        const storedTokenName = secondTokenParam || '';
-        if (storedTokenName === '') return { token: 'BTG', icon: './cryptos/btg.svg', price: 0 };
-        const storedToken = data.find(item => item.token.includes(storedTokenName));
-        return storedToken || { token: 'BTG', icon: './cryptos/btg.svg', price: 0 };
+    const [secondToken, setSecondToken] = useState<Token>(() => {
+        const storedTokenName = secondTokenParam || "";
+        if (storedTokenName === "") return { token: "USDT", icon: "./cryptos/usdt.svg", price: 1 };
+        const storedToken = data.find((item) => item.token.includes(storedTokenName));
+        return storedToken || { token: "USDT", icon: "./cryptos/usdt.svg", price: 1 };
     });
 
-    const [fistValue, setFistValue] = useState(0);
+    const [firstValue, setFirstValue] = useState(0);
     const [secondValue, setSecondValue] = useState(0);
-
-    const [messageApi, contextHolder] = message.useMessage();
 
     const firstTokenRef = useRef<HTMLInputElement>(null);
     const secondTokenRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (firstTokenParam && secondTokenParam) {
-            const newFirstToken = data.find(item => item.token.includes(firstTokenParam));
-            setFirstToken(newFirstToken || firstToken);
-            const newSecondToken = data.find(item => item.token.includes(secondTokenParam));
-            setSecondToken(newSecondToken || secondToken);
+            const newFirstToken = data.find((item) => item.token.includes(firstTokenParam));
+            if (newFirstToken) setFirstToken(newFirstToken);
+            const newSecondToken = data.find((item) => item.token.includes(secondTokenParam));
+            if (newSecondToken) setSecondToken(newSecondToken);
         }
     }, [firstTokenParam, secondTokenParam]);
 
-    useEffect(() => {
-        updateUrlParams();
-
-        if (firstToken.token === 'Select a token') firstTokenRef.current?.setAttribute('disabled', 'true');
-        else firstTokenRef.current?.removeAttribute('disabled');
-        if (secondToken.token === 'Select a token') secondTokenRef.current?.setAttribute('disabled', 'true');
-        else secondTokenRef.current?.removeAttribute('disabled');
-    }, [firstToken, secondToken]);
-
-    const updateUrlParams = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (firstToken.token !== 'Select a token') urlParams.set('firstToken', firstToken.token);
-        if (secondToken.token !== 'Select a token') urlParams.set('secondToken', secondToken.token);
-        window.history.replaceState({}, '', `?${urlParams.toString()}`);
-    };
-
     const onClose = () => {
-        setIsOpenFristToken(false);
+        setIsOpenFirstToken(false);
         setIsOpenSecondToken(false);
     };
 
     const setFToken = (token: string, icon: string, price: number) => {
-        setFirstToken({ token: token, icon: icon, price: price });
-        setFistValue(Number((secondValue * secondToken.price / price).toFixed(5)));
+        setFirstToken({ token, icon, price });
+        setFirstValue(Number((secondValue * secondToken.price / price).toFixed(6)));
         onClose();
     };
 
     const setSToken = (token: string, icon: string, price: number) => {
-        setSecondToken({ token: token, icon: icon, price: price });
-        setSecondValue(Number((fistValue * firstToken.price / price).toFixed(5)));
+        setSecondToken({ token, icon, price });
+        setSecondValue(Number((firstValue * firstToken.price / price).toFixed(6)));
         onClose();
     };
 
     const onChangeFirstToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFistValue(Number(e.target.value));
-        setSecondValue(Number((Number(e.target.value) * firstToken.price / secondToken.price).toFixed(5)));
+        const value = Number(e.target.value);
+        setFirstValue(value);
+        setSecondValue(Number((value * firstToken.price / secondToken.price).toFixed(6)));
     };
 
     const onChangeSecondToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSecondValue(Number(e.target.value));
-        setFistValue(Number((Number(e.target.value) * secondToken.price / firstToken.price).toFixed(5)));
-    };
-
-    const success = () => {
-        setIsOpenConfirm(false);
-        messageApi.open({
-            type: 'success',
-            content: 'Swap success!!!',
-        });
+        const value = Number(e.target.value);
+        setSecondValue(value);
+        setFirstValue(Number((value * secondToken.price / firstToken.price).toFixed(6)));
     };
 
     const changeToken = () => {
+        const tempToken = firstToken;
+        const tempValue = firstValue;
         setFirstToken(secondToken);
-        setFistValue(secondValue);
-        setSecondToken(firstToken);
-        setSecondValue(fistValue);
+        setFirstValue(secondValue);
+        setSecondToken(tempToken);
+        setSecondValue(tempValue);
     };
 
+    const handleSwap = async () => {
+        if (!isConnected) {
+            await connect();
+            return;
+        }
+
+        setIsSwapping(true);
+
+        // Simulate swap transaction
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        setIsSwapping(false);
+        alert(`✅ Swapped ${firstValue} ${firstToken.token} for ${secondValue} ${secondToken.token}`);
+    };
+
+    const rate = firstToken.price / secondToken.price;
+
     return (
-        <React.Suspense fallback={<div>Loading...</div>}>
-        <div className="w-[360px] p-1 rounded-lg border border-blue-300 mx-auto mt-[50px] dark:bg-gray-800 dark:border-gray-600">
-            {isOpenFristToken && (
+        <div className="card w-full max-w-[420px] p-4 mx-auto">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-white">Swap</h3>
+                <button
+                    onClick={() => setShowSettings(!showSettings)}
+                    className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                >
+                    <FaCog />
+                </button>
+            </div>
+
+            {/* Settings Dropdown */}
+            {showSettings && (
+                <div className="mb-4 p-3 rounded-xl glass-light">
+                    <label className="text-sm text-gray-400">Slippage Tolerance</label>
+                    <div className="flex gap-2 mt-2">
+                        {[0.1, 0.5, 1].map((value) => (
+                            <button
+                                key={value}
+                                onClick={() => setSlippage(value)}
+                                className={`px-3 py-1 rounded-lg text-sm transition-colors ${slippage === value
+                                        ? "bg-indigo-500 text-white"
+                                        : "bg-white/10 text-gray-400 hover:text-white"
+                                    }`}
+                            >
+                                {value}%
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* First Token (You Pay) */}
+            {isOpenFirstToken && (
                 <SearchCrypto
                     key={1}
-                    open={isOpenFristToken}
+                    open={isOpenFirstToken}
                     onClose={onClose}
                     setToken={(token, icon, price) => setFToken(token, icon, price)}
                 />
             )}
-            <div className="w-full p-2 bg-gray-100 rounded-lg mb-2 dark:bg-gray-700">
-                <span className="text-gray-400 left-2 dark:text-gray-300"> You pay </span>
-                <div className="flex justify-between mt-2 mx-2">
+
+            <div className="p-4 rounded-xl glass-light mb-1">
+                <span className="text-sm text-gray-400">You pay</span>
+                <div className="flex justify-between items-center mt-2">
                     <input
-                        placeholder='0'
-                        size={5}
+                        placeholder="0"
                         ref={firstTokenRef}
                         type="number"
-                        className="w-[150px] text-[20px] bg-transparent focus:outline-none dark:text-white"
-                        style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }} 
+                        className="w-[60%] text-2xl font-medium bg-transparent focus:outline-none text-white placeholder-gray-500"
                         onChange={onChangeFirstToken}
-                        value={fistValue.toString()}
+                        value={firstValue || ""}
                     />
 
-                    <div
-                        className="flex p-2 rounded-full bg-white font-medium text-[20px] hover: cursor-pointer hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
-                        onClick={() => setIsOpenFristToken(true)}>
-                        <img src={firstToken.icon} alt={firstToken.token} />
-                        <span className="ml-2">{firstToken.token}</span>
-                        <FaAngleDown className="mt-2 ml-1" />
-                    </div>
+                    <button
+                        className="flex items-center gap-2 px-4 py-2 rounded-full glass hover:bg-white/20 transition-colors"
+                        onClick={() => setIsOpenFirstToken(true)}
+                    >
+                        <img src={firstToken.icon} alt={firstToken.token} className="w-6 h-6" />
+                        <span className="font-medium text-white">{firstToken.token}</span>
+                        <FaAngleDown className="text-gray-400" />
+                    </button>
                 </div>
-                <span className="ml-3 text-gray-400 dark:text-gray-300">
-                    {fistValue != 0 && firstToken.price != 0 && `$${fistValue * firstToken.price}`}
-                </span>
-            </div>
-            <div 
-                className="absolute transform  ml-[160px] -mt-5 bg-white rounded-md dark:bg-gray-700"
-                onClick={changeToken}>
-                <div className="hover: cursor-pointer m-1 p-2 bg-gray-100 z-[999] rounded-md hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-[20px]">
-                    <HiArrowsUpDown />
-                </div>
+                {firstValue > 0 && (
+                    <span className="text-sm text-gray-500">
+                        ≈ ${(firstValue * firstToken.price).toLocaleString()}
+                    </span>
+                )}
             </div>
 
+            {/* Swap Button */}
+            <div className="flex justify-center -my-2 relative z-10">
+                <button
+                    onClick={changeToken}
+                    className="p-3 rounded-xl glass border border-white/20 hover:bg-white/20 transition-all hover:scale-110"
+                >
+                    <HiArrowsUpDown className="text-xl text-indigo-400" />
+                </button>
+            </div>
+
+            {/* Second Token (You Receive) */}
             {isOpenSecondToken && (
                 <SearchCrypto
                     key={2}
@@ -158,51 +203,80 @@ const CryptoSwap = () => {
                 />
             )}
 
-            <div className="w-full p-2 bg-gray-100 rounded-lg dark:bg-gray-700">
-                <span className="text-gray-400 left-2 dark:text-gray-300"> You receive </span>
-                <div className="flex justify-between mt-2 mx-2">
+            <div className="p-4 rounded-xl glass-light mt-1">
+                <span className="text-sm text-gray-400">You receive</span>
+                <div className="flex justify-between items-center mt-2">
                     <input
-                        placeholder='0'
-                        size={15}
+                        placeholder="0"
                         ref={secondTokenRef}
                         type="number"
-                        className="w-[150px] text-[20px] bg-transparent focus:outline-none dark:text-white"
+                        className="w-[60%] text-2xl font-medium bg-transparent focus:outline-none text-white placeholder-gray-500"
                         onChange={onChangeSecondToken}
-                        value={secondValue.toString()}
+                        value={secondValue || ""}
                     />
 
-                    <div
-                        className="flex p-2 rounded-full bg-white font-medium text-[20px] hover: cursor-pointer hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
-                        onClick={() => setIsOpenSecondToken(true)}>
-                        <img src={secondToken.icon} alt={secondToken.token} />
-                        <span className="ml-2">{secondToken.token}</span>
-                        <FaAngleDown className="mt-2 ml-1" />
+                    <button
+                        className="flex items-center gap-2 px-4 py-2 rounded-full glass hover:bg-white/20 transition-colors"
+                        onClick={() => setIsOpenSecondToken(true)}
+                    >
+                        <img src={secondToken.icon} alt={secondToken.token} className="w-6 h-6" />
+                        <span className="font-medium text-white">{secondToken.token}</span>
+                        <FaAngleDown className="text-gray-400" />
+                    </button>
+                </div>
+                {secondValue > 0 && (
+                    <span className="text-sm text-gray-500">
+                        ≈ ${(secondValue * secondToken.price).toLocaleString()}
+                    </span>
+                )}
+            </div>
+
+            {/* Rate Info */}
+            {firstValue > 0 && (
+                <div className="mt-3 p-3 rounded-xl glass-light text-sm text-gray-400">
+                    <div className="flex justify-between">
+                        <span>Rate</span>
+                        <span className="text-white">
+                            1 {firstToken.token} = {rate.toFixed(4)} {secondToken.token}
+                        </span>
+                    </div>
+                    <div className="flex justify-between mt-1">
+                        <span>Slippage</span>
+                        <span className="text-white">{slippage}%</span>
                     </div>
                 </div>
-                <span className="ml-3 text-gray-400 dark:text-gray-300">
-                    {secondValue != 0 && secondToken.price != 0 && `$${secondValue * secondToken.price}`}
-                </span>
-            </div>
-            {contextHolder}
-            <button
-                className="w-full h-[40px] bg-pink-100 text-center items-center mt-2 rounded-lg font-medium text-[18px] text-pink-600 hover:bg-pink-200 dark:bg-pink-600 dark:text-white dark:hover:bg-pink-500"
-                onClick={() => setIsOpenConfirm(true)}
-            >
-                Swap
-            </button>
+            )}
 
-            <Modal
-                title="Confirm"
-                open={isOpenConfirm}
-                onOk={success}
-                onCancel={() => setIsOpenConfirm(false)}
-                okText="Yes"
-                cancelText="No"
+            {/* Swap Button */}
+            <button
+                onClick={handleSwap}
+                disabled={isSwapping || firstValue === 0}
+                className={`w-full mt-4 py-4 rounded-xl font-semibold text-lg transition-all ${!isConnected
+                        ? "gradient-bg text-white hover:opacity-90"
+                        : firstValue === 0
+                            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                            : isSwapping
+                                ? "bg-indigo-500/50 text-white cursor-wait"
+                                : "gradient-bg text-white hover:opacity-90"
+                    }`}
             >
-                <p>Are you really swap?</p>
-            </Modal>
+                {!isConnected
+                    ? "Connect Wallet"
+                    : isSwapping
+                        ? "Swapping..."
+                        : firstValue === 0
+                            ? "Enter an amount"
+                            : "Swap"}
+            </button>
         </div>
-        </React.Suspense>
+    );
+};
+
+const CryptoSwap = () => {
+    return (
+        <Suspense fallback={<div className="card w-full max-w-[420px] p-8 mx-auto animate-pulse">Loading...</div>}>
+            <CryptoSwapContent />
+        </Suspense>
     );
 };
 
