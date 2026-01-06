@@ -107,6 +107,7 @@ CryptoSwap addresses these challenges through:
 |---------|-------------|
 | 🔗 **MetaMask Integration** | One-click wallet connection with account change detection |
 | 💱 **Token Swaps** | Instant token exchanges with real-time rate calculation |
+| 🔍 **Smart Token Selector** | Searchable token picker with popular tokens, prices, and quick-select chips |
 | ⚙️ **Slippage Control** | Configurable slippage tolerance (0.1%, 0.5%, 1%) |
 | 📊 **Transaction History** | View all past swaps with Etherscan links |
 | 🌙 **Dark/Light Mode** | Fully themed UI with smooth transitions |
@@ -126,6 +127,12 @@ CryptoSwap addresses these challenges through:
 ### Homepage (Dark Mode)
 <p align="center">
   <img src="docs/screenshots/homepage-dark.png" alt="Homepage Dark Mode" width="80%">
+</p>
+
+### Token Selector Modal
+Select from popular tokens or search by name/symbol. Real-time prices and quick-select chips for instant access.
+<p align="center">
+  <img src="docs/screenshots/token-selector.png" alt="Token Selector Modal" width="60%">
 </p>
 
 ### Swap Interface (Dark & Light Mode)
