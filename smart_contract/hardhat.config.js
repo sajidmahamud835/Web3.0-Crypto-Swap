@@ -1,13 +1,30 @@
-require('@nomiclabs/hardhat-waffle')
+require('@nomicfoundation/hardhat-toolbox')
+require('dotenv').config()
 
+/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: '0.8.0',
-  networks: {
-    rinkeby: {
-      url: 'https://eth-sepolia.g.alchemy.com/v2/GwFMMcdmjN0DksuPeovADvHgl8xtLmdG',
-      accounts: [
-        '8c7cdcffb638fe33a17dcfa945d81596d4ba244434446d753bbf8e291ac89ca1',
-      ],
+  solidity: {
+    version: '0.8.24',
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
     },
+  },
+  networks: {
+    sepolia: {
+      url: process.env.ALCHEMY_SEPOLIA_URL || '',
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
+    localhost: {
+      url: 'http://127.0.0.1:8545',
+    },
+  },
+  paths: {
+    sources: './contracts',
+    tests: './test',
+    cache: './cache',
+    artifacts: './artifacts',
   },
 }

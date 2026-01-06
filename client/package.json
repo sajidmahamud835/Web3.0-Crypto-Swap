@@ -1,6 +1,6 @@
 {
-  "name": "web3-crypto-swap-next-app",
-  "version": "0.1.0",
+  "name": "web3-crypto-swap",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,31 +9,28 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
+    "@emotion/react": "^11.13.0",
     "@sanity/client": "^6.21.0",
-    "@types/react-dom": "^18.3.0",
-    "antd": "^5.19.1",
+    "antd": "^5.22.0",
     "ethers": "^6.13.1",
-    "flowbite": "^2.4.1",
-    "flowbite-react": "^0.10.1",
-    "next": "14.2.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^5.2.1",
+    "flowbite": "^2.5.0",
+    "flowbite-react": "^0.10.2",
+    "next": "15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
     "react-modal": "^3.16.1",
-    "react-router-dom": "^6.24.1",
-    "react-scripts": "^5.0.1",
-    "react-spinners": "^0.14.1",
-    "tailwind": "^4.0.0",
-    "web-vitals": "^2.1.4"
+    "react-spinners": "^0.14.1"
   },
   "devDependencies": {
-    "@types/node": "^16.18.101",
-    "@types/react": "^18.3.3",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.4",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^4.9.5"
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/react-modal": "^3.16.3",
+    "eslint": "^9.16.0",
+    "eslint-config-next": "15.1.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2"
   }
 }
