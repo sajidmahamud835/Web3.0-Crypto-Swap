@@ -97,15 +97,11 @@ function Navbar() {
 
                         {/* Docs Link */}
                         <li>
-                            <a
-                                href="https://github.com/sajidmahamud835/Web3.0-Crypto-Swap"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors flex items-center gap-1"
-                            >
-                                Docs
-                                <HiOutlineExternalLink className="w-4 h-4" />
-                            </a>
+                            <Link href="/docs">
+                                <span className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer">
+                                    Docs
+                                </span>
+                            </Link>
                         </li>
 
                         {/* Theme Toggle */}
