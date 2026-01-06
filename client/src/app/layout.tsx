@@ -15,10 +15,14 @@ export const metadata = {
     },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
-        <html lang="en" className="dark">
-            <body className={`${inter.className} bg-[#0f0f1a] text-white antialiased`}>
+        <html lang="en" className="dark" suppressHydrationWarning>
+            <body className={`${inter.className} bg-[var(--background)] text-[var(--text)] antialiased transition-colors duration-300`}>
                 <WalletProvider>
                     {children}
                 </WalletProvider>
