@@ -13,11 +13,14 @@
   --surface-light: #252540;
   --text: #f1f5f9;
   --text-muted: #94a3b8;
+  --text-inverse: #0f172a;
   --border: rgba(255, 255, 255, 0.1);
   --gradient-start: #6366f1;
   --gradient-end: #10b981;
   --glass-bg: rgba(26, 26, 46, 0.7);
   --glass-light-bg: rgba(255, 255, 255, 0.05);
+  --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --nav-bg: rgba(15, 15, 26, 0.9);
 }
 
 /* ===== CSS Variables - Light Mode ===== */
@@ -27,9 +30,12 @@ html:not(.dark) {
   --surface-light: #f1f5f9;
   --text: #0f172a;
   --text-muted: #64748b;
+  --text-inverse: #f1f5f9;
   --border: rgba(0, 0, 0, 0.1);
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-light-bg: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-light-bg: rgba(0, 0, 0, 0.03);
+  --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  --nav-bg: rgba(255, 255, 255, 0.9);
 }
 
 /* ===== Base Styles ===== */
@@ -137,18 +143,22 @@ body {
 
   /* Cards */
   .card {
-    @apply rounded-2xl p-6 glass;
+    @apply rounded-2xl p-6;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card:hover {
     transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   }
 
   /* Input Fields */
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl glass-light;
+    @apply w-full px-4 py-3 rounded-xl;
+    background: var(--glass-light-bg);
+    border: 1px solid var(--border);
     color: var(--text);
     outline: none;
     transition: all 0.3s ease;
@@ -161,6 +171,24 @@ body {
 
   .input-field::placeholder {
     color: var(--text-muted);
+  }
+
+  /* Text Colors */
+  .text-primary-theme {
+    color: var(--text);
+  }
+
+  .text-muted-theme {
+    color: var(--text-muted);
+  }
+
+  /* Surface backgrounds */
+  .bg-surface {
+    background: var(--surface);
+  }
+
+  .bg-surface-light {
+    background: var(--surface-light);
   }
 }
 
@@ -402,7 +430,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--surface-light);
+  background: var(--text-muted);
   border-radius: 4px;
   transition: background 0.2s ease;
 }
@@ -429,4 +457,67 @@ code {
 /* ===== Theme Transition ===== */
 .theme-transition {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ===== Light Mode Specific Overrides ===== */
+html:not(.dark) .text-white {
+  color: var(--text) !important;
+}
+
+html:not(.dark) .text-gray-300,
+html:not(.dark) .text-gray-400 {
+  color: var(--text-muted) !important;
+}
+
+html:not(.dark) .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+html:not(.dark) .bg-white\/10,
+html:not(.dark) .bg-white\/5 {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+html:not(.dark) .hover\:bg-white\/10:hover,
+html:not(.dark) .hover\:bg-white\/20:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .border-white\/10,
+html:not(.dark) .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Light mode navbar */
+html:not(.dark) nav.glass {
+  background: var(--nav-bg);
+  border-bottom-color: var(--border);
+}
+
+/* Light mode cards */
+html:not(.dark) .card {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Light mode feature cards */
+html:not(.dark) .card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Light mode inputs */
+html:not(.dark) input {
+  color: var(--text);
+  background: var(--glass-light-bg);
+}
+
+html:not(.dark) input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Light mode footer */
+html:not(.dark) footer {
+  background: var(--surface);
+  border-top-color: var(--border);
 }

@@ -20,22 +20,22 @@ export default function HeroSection() {
                     {/* Left Column - Content */}
                     <div className="space-y-8">
                         {/* Badge */}
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-light">
-                            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                            <span className="text-emerald-400 text-sm font-medium">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-light border border-[var(--border)]">
+                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                            <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">
                                 Low Fees • Lightning Fast • Secure
                             </span>
                         </div>
 
                         {/* Heading */}
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                            <span className="text-white">Swap Crypto</span>
+                            <span className="text-[var(--text)]">Swap Crypto</span>
                             <br />
                             <span className="gradient-text">Instantly & Securely</span>
                         </h1>
 
                         {/* Description */}
-                        <p className="text-lg text-gray-400 max-w-lg">
+                        <p className="text-lg text-[var(--text-muted)] max-w-lg">
                             Trade tokens directly from your wallet with minimal fees.
                             Connect MetaMask and swap in seconds — no sign-up required.
                         </p>
@@ -57,25 +57,25 @@ export default function HeroSection() {
                                 href="https://github.com/sajidmahamud835/Web3.0-Crypto-Swap"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-8 py-4 text-lg text-gray-300 hover:text-white transition-colors flex items-center gap-2"
+                                className="px-8 py-4 text-lg text-[var(--text-muted)] hover:text-[var(--text)] transition-colors flex items-center gap-2"
                             >
                                 Learn More →
                             </a>
                         </div>
 
                         {/* Stats */}
-                        <div className="grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
+                        <div className="grid grid-cols-3 gap-6 pt-8 border-t border-[var(--border)]">
                             <div>
-                                <div className="text-2xl font-bold text-white">$2.4M+</div>
-                                <div className="text-sm text-gray-500">Volume Traded</div>
+                                <div className="text-2xl font-bold text-[var(--text)]">$2.4M+</div>
+                                <div className="text-sm text-[var(--text-muted)]">Volume Traded</div>
                             </div>
                             <div>
-                                <div className="text-2xl font-bold text-white">50K+</div>
-                                <div className="text-sm text-gray-500">Transactions</div>
+                                <div className="text-2xl font-bold text-[var(--text)]">50K+</div>
+                                <div className="text-sm text-[var(--text-muted)]">Transactions</div>
                             </div>
                             <div>
-                                <div className="text-2xl font-bold text-white">0.1%</div>
-                                <div className="text-sm text-gray-500">Swap Fee</div>
+                                <div className="text-2xl font-bold text-[var(--text)]">0.1%</div>
+                                <div className="text-sm text-[var(--text-muted)]">Swap Fee</div>
                             </div>
                         </div>
                     </div>
@@ -90,17 +90,17 @@ export default function HeroSection() {
 
                 {/* Feature Pills */}
                 <div className="mt-16 flex flex-wrap justify-center gap-4">
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-light">
-                        <FaShieldAlt className="text-indigo-400" />
-                        <span className="text-gray-300 text-sm">Non-Custodial</span>
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-light border border-[var(--border)]">
+                        <FaShieldAlt className="text-indigo-500" />
+                        <span className="text-[var(--text-muted)] text-sm">Non-Custodial</span>
                     </div>
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-light">
-                        <FaBolt className="text-yellow-400" />
-                        <span className="text-gray-300 text-sm">Instant Swaps</span>
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-light border border-[var(--border)]">
+                        <FaBolt className="text-yellow-500" />
+                        <span className="text-[var(--text-muted)] text-sm">Instant Swaps</span>
                     </div>
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-light">
-                        <FaRocket className="text-emerald-400" />
-                        <span className="text-gray-300 text-sm">Multi-Chain Support</span>
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-light border border-[var(--border)]">
+                        <FaRocket className="text-emerald-500" />
+                        <span className="text-[var(--text-muted)] text-sm">Multi-Chain Support</span>
                     </div>
                 </div>
             </div>

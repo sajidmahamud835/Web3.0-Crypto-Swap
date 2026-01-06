@@ -7,37 +7,37 @@ const features = [
         icon: FaBolt,
         title: "Lightning Fast",
         description: "Execute swaps in seconds with our optimized routing algorithm.",
-        color: "text-yellow-400",
+        color: "text-yellow-500",
     },
     {
         icon: FaShieldAlt,
         title: "Secure & Safe",
         description: "Non-custodial swaps. Your keys, your crypto. Always.",
-        color: "text-emerald-400",
+        color: "text-emerald-500",
     },
     {
         icon: FaCoins,
         title: "Low Fees",
         description: "Only 0.1% swap fee. Save more on every transaction.",
-        color: "text-indigo-400",
+        color: "text-indigo-500",
     },
     {
         icon: FaLock,
         title: "No KYC Required",
         description: "Trade anonymously. No sign-up, no personal data collected.",
-        color: "text-pink-400",
+        color: "text-pink-500",
     },
     {
         icon: FaGlobe,
         title: "Multi-Chain",
         description: "Support for Ethereum, Polygon, and more chains coming soon.",
-        color: "text-blue-400",
+        color: "text-blue-500",
     },
     {
         icon: FaChartLine,
         title: "Best Rates",
         description: "Aggregated pricing ensures you always get the best deal.",
-        color: "text-orange-400",
+        color: "text-orange-500",
     },
 ];
 
@@ -47,10 +47,10 @@ export default function FeatureSection() {
             <div className="max-w-screen-xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] mb-4">
                         Why Choose <span className="gradient-text">CryptoSwap</span>?
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-[var(--text-muted)] max-w-2xl mx-auto">
                         Experience the future of decentralized trading with our cutting-edge platform.
                     </p>
                 </div>
@@ -62,11 +62,11 @@ export default function FeatureSection() {
                             key={index}
                             className="card group hover:border-indigo-500/50 transition-all duration-300"
                         >
-                            <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${feature.color}`}>
+                            <div className={`w-12 h-12 rounded-xl bg-[var(--glass-light-bg)] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${feature.color}`}>
                                 <feature.icon className="text-2xl" />
                             </div>
-                            <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                            <p className="text-gray-400">{feature.description}</p>
+                            <h3 className="text-xl font-semibold text-[var(--text)] mb-2">{feature.title}</h3>
+                            <p className="text-[var(--text-muted)]">{feature.description}</p>
                         </div>
                     ))}
                 </div>
@@ -74,11 +74,11 @@ export default function FeatureSection() {
                 {/* CTA Section */}
                 <div className="mt-20 text-center">
                     <div className="card max-w-3xl mx-auto p-8 md:p-12 gradient-border">
-                        <div className="relative z-10 bg-[#1a1a2e] rounded-xl p-8">
-                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                        <div className="relative z-10 bg-[var(--surface)] rounded-xl p-8">
+                            <h3 className="text-2xl md:text-3xl font-bold text-[var(--text)] mb-4">
                                 Ready to Start Trading?
                             </h3>
-                            <p className="text-gray-400 mb-6">
+                            <p className="text-[var(--text-muted)] mb-6">
                                 Connect your wallet and make your first swap in under a minute.
                             </p>
                             <a

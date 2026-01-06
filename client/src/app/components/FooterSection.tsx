@@ -29,7 +29,7 @@ const socials = [
 
 export default function FooterSection() {
     return (
-        <footer className="border-t border-white/10 bg-[#0a0a14]">
+        <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
             <div className="max-w-screen-xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                     {/* Brand */}
@@ -39,10 +39,10 @@ export default function FooterSection() {
                                 <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
                                     <span className="text-white font-bold text-xl">C</span>
                                 </div>
-                                <span className="text-xl font-bold text-white">CryptoSwap</span>
+                                <span className="text-xl font-bold text-[var(--text)]">CryptoSwap</span>
                             </span>
                         </Link>
-                        <p className="text-gray-400 text-sm mb-4">
+                        <p className="text-[var(--text-muted)] text-sm mb-4">
                             Decentralized token exchange built for the future of finance.
                         </p>
                         {/* Social Links */}
@@ -53,7 +53,7 @@ export default function FooterSection() {
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                                    className="p-2 rounded-lg bg-[var(--glass-light-bg)] hover:bg-[var(--surface-light)] text-[var(--text-muted)] hover:text-[var(--text)] transition-colors border border-[var(--border)]"
                                     aria-label={social.label}
                                 >
                                     <social.icon className="text-lg" />
@@ -65,13 +65,13 @@ export default function FooterSection() {
                     {/* Links */}
                     {Object.entries(links).map(([category, items]) => (
                         <div key={category}>
-                            <h4 className="text-white font-semibold mb-4">{category}</h4>
+                            <h4 className="text-[var(--text)] font-semibold mb-4">{category}</h4>
                             <ul className="space-y-2">
                                 {items.map((item, index) => (
                                     <li key={index}>
                                         <a
                                             href={item.href}
-                                            className="text-gray-400 hover:text-white transition-colors text-sm"
+                                            className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors text-sm"
                                             target={item.href.startsWith("http") ? "_blank" : undefined}
                                             rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                                         >
@@ -85,17 +85,17 @@ export default function FooterSection() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-gray-500 text-sm">
+                <div className="mt-12 pt-8 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-[var(--text-muted)] text-sm">
                         © {new Date().getFullYear()} CryptoSwap. All rights reserved.
                     </p>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-[var(--text-muted)] text-sm">
                         Built by{" "}
                         <a
                             href="https://github.com/sajidmahamud835"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-indigo-400 hover:text-indigo-300"
+                            className="text-indigo-500 hover:text-indigo-400"
                         >
                             Sajid Mahamud
                         </a>

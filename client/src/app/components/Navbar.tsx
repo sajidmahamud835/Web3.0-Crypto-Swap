@@ -47,7 +47,7 @@ function Navbar() {
     };
 
     return (
-        <nav className="sticky top-0 z-50 glass border-b border-white/10">
+        <nav className="sticky top-0 z-50 glass border-b border-[var(--border)]">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 {/* Logo */}
                 <Link href="/">
@@ -55,7 +55,7 @@ function Navbar() {
                         <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
                             <span className="text-white font-bold text-xl">C</span>
                         </div>
-                        <span className="self-center text-2xl font-bold text-white group-hover:text-indigo-400 transition-colors">
+                        <span className="self-center text-2xl font-bold text-[var(--text)] group-hover:text-indigo-500 transition-colors">
                             CryptoSwap
                         </span>
                     </span>
@@ -80,7 +80,7 @@ function Navbar() {
                         {/* Swap Link */}
                         <li>
                             <Link href="/swap">
-                                <span className="text-gray-300 hover:text-white transition-colors cursor-pointer">
+                                <span className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer">
                                     Swap
                                 </span>
                             </Link>
@@ -89,7 +89,7 @@ function Navbar() {
                         {/* Dashboard Link */}
                         <li>
                             <Link href="/dashboard">
-                                <span className="text-gray-300 hover:text-white transition-colors cursor-pointer">
+                                <span className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer">
                                     Dashboard
                                 </span>
                             </Link>
@@ -101,7 +101,7 @@ function Navbar() {
                                 href="https://github.com/sajidmahamud835/Web3.0-Crypto-Swap"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
+                                className="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors flex items-center gap-1"
                             >
                                 Docs
                                 <HiOutlineExternalLink className="w-4 h-4" />
@@ -112,7 +112,7 @@ function Navbar() {
                         <li>
                             <button
                                 onClick={toggleDarkMode}
-                                className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"
+                                className="p-3 rounded-xl bg-[var(--glass-light-bg)] hover:bg-[var(--surface-light)] text-[var(--text)] border border-[var(--border)] transition-all"
                                 aria-label="Toggle theme"
                             >
                                 {isDarkMode ? <FaSun size={18} /> : <FaMoon size={18} />}
