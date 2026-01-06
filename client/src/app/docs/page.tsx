@@ -1,5 +1,6 @@
 "use client";
 
+import { Metadata } from "next";
 import Navbar from "../components/Navbar";
 import FooterSection from "../components/FooterSection";
 import { FaFileAlt, FaGithub, FaDownload } from "react-icons/fa";

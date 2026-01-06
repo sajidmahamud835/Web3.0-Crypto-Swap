@@ -1,10 +1,17 @@
+import { Metadata } from "next";
 import Navbar from "../components/Navbar";
 import CryptoSwap from "../components/CryptoSwap";
 import FooterSection from "../components/FooterSection";
 
-export const metadata = {
-    title: "Swap | CryptoSwap",
-    description: "Swap tokens instantly with low fees on CryptoSwap DEX.",
+export const metadata: Metadata = {
+    title: "Swap Tokens",
+    description:
+        "Swap tokens instantly with the lowest fees. Trade ETH, USDT, USDC, WBTC and more on CryptoSwap - your non-custodial DEX.",
+    keywords: ["token swap", "crypto swap", "DEX", "trade tokens", "Ethereum swap"],
+    openGraph: {
+        title: "Swap Tokens | CryptoSwap",
+        description: "Swap tokens instantly with the lowest fees on CryptoSwap DEX.",
+    },
 };
 
 export default function SwapPage() {
